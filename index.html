@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For For you mommy 💗</title>
+<title>For you mommy 💗</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 
@@ -22,6 +21,53 @@ body {
   --pink: #e99aaf;
   --dark: #a94d6b;
   --paper: #fffaf0;
+}
+
+/* Music Dialog Overlay */
+#musicModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(113, 61, 80, 0.4);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+}
+
+.modal-card {
+  background: var(--paper);
+  padding: 40px 30px;
+  max-width: 420px;
+  width: 90%;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(113, 61, 80, 0.2);
+  position: relative;
+}
+
+.modal-card h2 {
+  font-family: 'Playfair Display', serif;
+  color: #b94d72;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.modal-card p {
+  font-family: 'Caveat', cursive;
+  font-size: 24px;
+  color: #92516a;
+  margin-bottom: 25px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
 section {
@@ -52,8 +98,6 @@ h1 {
   font-size: clamp(2.2rem, 7vw, 3.6rem);
   color: #b94d72;
 }
-
-h2 { font-size: 2rem; }
 
 p {
   line-height: 1.9;
@@ -264,7 +308,21 @@ footer {
 
 <body>
 
-<audio id="bgMusic" autoplay loop preload="auto" playsinline>
+<!-- MUSIC SELECTION DIALOG BOX -->
+<div id="musicModal">
+  <div class="modal-card">
+    <div class="sticker" style="top:-20px; left:15px">🎵</div>
+    <div class="sticker" style="bottom:10px; right:15px">💖</div>
+    <h2>Play Background Music?</h2>
+    <p>Would you like some lovely music while you read this? ♡</p>
+    <div class="modal-buttons">
+      <button onclick="handleMusicChoice(true)">Yes, please! 🎶</button>
+      <button onclick="handleMusicChoice(false)" style="background: #999;">No thanks</button>
+    </div>
+  </div>
+</div>
+
+<audio id="bgMusic" loop preload="auto" playsinline>
   <source src="song.mp3" type="audio/mpeg">
   Your browser does not support audio playback.
 </audio>
@@ -299,7 +357,7 @@ footer {
   <div class="paper">
     <div class="tape"></div>
 
-    <h1 class="center">You are speacial</h1>
+    <h1 class="center">You are special</h1>
     <p class="center subtitle">♡</p>
 
     <div class="photo-grid">
@@ -545,27 +603,25 @@ noBtn.addEventListener("click", function(e) {
   moveNoButton();
 });
 
-
-// Automatically try to play the custom background music when the page opens.
+// Music Dialog Choice Handling
 const bgMusic = document.getElementById("bgMusic");
 bgMusic.volume = 0.45;
 
-function startBackgroundMusic() {
-  if (!bgMusic || !bgMusic.paused) return;
+function handleMusicChoice(playMusic) {
+  const modal = document.getElementById("musicModal");
+  
+  if (playMusic) {
+    bgMusic.play().catch(error => {
+      console.log("Playback failed:", error);
+    });
+  }
 
-  bgMusic.play().catch(error => {
-    // Browsers may block audible autoplay until the visitor interacts with the page.
-    console.log("Autoplay was blocked; music will start after the first interaction.", error);
-  });
+  // Smoothly fade out and hide the dialog box
+  modal.style.opacity = "0";
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 300);
 }
-
-// Initial autoplay attempt.
-window.addEventListener("load", startBackgroundMusic);
-
-// If autoplay is blocked, start on the visitor's first interaction anywhere on the page.
-["pointerdown", "touchstart", "keydown"].forEach(eventName => {
-  document.addEventListener(eventName, startBackgroundMusic, { once: true, passive: true });
-});
 
 </script>
 </body>
